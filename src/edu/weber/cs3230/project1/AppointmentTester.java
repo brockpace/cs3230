@@ -1,10 +1,13 @@
 package edu.weber.cs3230.project1;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class AppointmentTester {
@@ -13,7 +16,10 @@ public class AppointmentTester {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Appointment appointment[] = new Appointment[5]; 
+		ArrayList<Appointment> appointmentList = new ArrayList<Appointment>();
+		ArrayList<Appointment> loadedAppointments = new ArrayList<Appointment>();
+		
+		Appointment appointment[] = new Appointment[4];
 		appointment[0] = new Appointment(2013, 6, 4, "CS3230.");
 		appointment[1] = new Onetime(2013, 6, 3, "This assignment is due.");
 		appointment[2] = new Daily(2013, 6, 4, "Eat Dinner.", 2013, 6, 4, 2013, 8, 4);
@@ -38,7 +44,14 @@ public class AppointmentTester {
 				for(Appointment a : appointment) {
 					if(a != null && a.occursOn(year, month, day))
 						System.out.println(a.getDescription());
-				}	
+				}
+				for(Appointment a : appointmentList)
+					if(a != null && a.occursOn(year, month, day))
+						System.out.println(a.getDescription());
+				for(Appointment a : loadedAppointments)
+					if(a != null && a.occursOn(year, month, day))
+						System.out.println(a.getDescription());
+				
 				System.out.println();
 				break;
 			case 2:
@@ -58,57 +71,61 @@ public class AppointmentTester {
 			    
 			    if(type.equals("monthly") || type.equals("daily"))
 			    {
-			    	System.out.println("Enter the start year: ");
+			    	System.out.print("Enter the start year: ");
 			    	startYear = in.nextInt();
-			    	System.out.println("Enter the start month: ");
+			    	System.out.print("Enter the start month: ");
 			    	startMonth = in.nextInt();
-			    	System.out.println("Enter the start day: ");
+			    	System.out.print("Enter the start day: ");
 			    	startDay = in.nextInt();
 			    	
-			    	System.out.println("Enter the end year: ");
+			    	System.out.print("Enter the end year: ");
 			    	endYear = in.nextInt();
-			    	System.out.println("Enter the end month: ");
+			    	System.out.print("Enter the end month: ");
 			    	endMonth = in.nextInt();
-			    	System.out.println("Enter the end day: ");
+			    	System.out.print("Enter the end day: ");
 			    	endDay = in.nextInt();
 			    }
 			    	
 				switch (type){
 					case "Monthly": case "monthly":
-						appointment[4] = new Monthly(newYear, newMonth, newDay, description, 
-								startYear, startMonth, startDay, endYear, endMonth, endDay);
+						appointmentList.add(new Monthly(newYear, newMonth, newDay, description, 
+								startYear, startMonth, startDay, endYear, endMonth, endDay));
 						break;
 					case "Daily": case "daily":
-						appointment[4] = new Daily(newYear, newMonth, newDay, description, 
-								startYear, startMonth, startDay, endYear, endMonth, endDay);
+						appointmentList.add(new Daily(newYear, newMonth, newDay, description, 
+								startYear, startMonth, startDay, endYear, endMonth, endDay));
 						break;
 					case "Once": case "once": case "onetime": case "Onetime": default:
-						appointment[4] = new Onetime(newYear, newMonth, newDay, description);
+						appointmentList.add(new Onetime(newYear, newMonth, newDay, description));
 						break;
 				}
 				break;
 			case 3:
-				//Save Appointment
-				if(appointment[4] != null)
+				//Save Appointments
+				if(!appointmentList.isEmpty())
 				{
-					appointment[4].save();
-					System.out.println("Appointment Saved!");
+					save(appointmentList);
+					appointmentList.clear();
+					System.out.println("Appointments Saved!");
 				}
 				else
-					System.out.println("There is no appointment to save.  Please enter an appointment (option 2)");
+					System.out.println("There are no appointments to save.  Please enter an appointment (option 2)");
 				break;
 			case 4:
-				//Load Appointment				
+				//Load Appointments				
 				Scanner input;
+				
+				loadedAppointments.clear();
 				
 				try {
 					input = new Scanner(new File(fileName));
 					int loadYear, loadMonth, loadDay, loadStartYear = 0, loadStartMonth = 0, loadStartDay = 0, 
 							loadEndYear = 0, loadEndMonth = 0, loadEndDay = 0;
-					String loadDescription = "";
+					String loadDescription, line;
 					while (input.hasNextLine())
 					{
-						String line = input.nextLine();
+						loadDescription = "";
+						line = input.nextLine();
 						String appointmentRaw[] = line.split(" ");
 						
 						loadYear = Integer.parseInt(appointmentRaw[1]);
@@ -132,19 +149,19 @@ public class AppointmentTester {
 						
 						switch (appointmentRaw[0]){
 							case "Monthly": case "monthly":
-								appointment[4] = new Monthly(loadYear, loadMonth, loadDay, loadDescription, 
-										loadStartYear, loadStartMonth, loadStartDay, loadEndYear, loadEndMonth, loadEndDay);
+								loadedAppointments.add(new Monthly(loadYear, loadMonth, loadDay, loadDescription, 
+										loadStartYear, loadStartMonth, loadStartDay, loadEndYear, loadEndMonth, loadEndDay));
 								break;
 							case "Daily": case "daily":
-								appointment[4] = new Daily(loadYear, loadMonth, loadDay, loadDescription, 
-										loadStartYear, loadStartMonth, loadStartDay, loadEndYear, loadEndMonth, loadEndDay);
+								loadedAppointments.add(new Daily(loadYear, loadMonth, loadDay, loadDescription, 
+										loadStartYear, loadStartMonth, loadStartDay, loadEndYear, loadEndMonth, loadEndDay));
 								break;
 							case "Once": case "once": case "onetime": case "Onetime": default:
-								appointment[4] = new Onetime(loadYear, loadMonth, loadDay, loadDescription);
+								loadedAppointments.add(new Onetime(loadYear, loadMonth, loadDay, loadDescription));
 								break;
 						}
-						System.out.println("Appointment Loaded!");
 					}
+					System.out.println("Appointments Loaded!");
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -152,14 +169,38 @@ public class AppointmentTester {
 			}
 			
 		}
+	}
+	
+	public static void save(ArrayList<Appointment> appointments) {
+		File inputFile = new File("appointments.txt");
+		if (!inputFile.exists()) {
+			try {
+				inputFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
-		
-		
-//		System.out.println("Appointment: " + appointment[0].getDate().toString() + " Description: " + appointment[0].getDescription());
-//		if(appointment[0].occursOn(2013, 6, 4))
-//			System.out.println("Working");
-//		
-//		if(appointment[1].occursOn(2013, 6, 3))
-//			System.out.println("Working");
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MM dd");
+			PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream(inputFile, true)));
+			for(Appointment a : appointments) {
+				String type[] = a.getClass().getName().split("\\.");
+				
+				if(type[type.length - 1].equalsIgnoreCase("Daily"))
+					out.println(type[type.length - 1] + " " + dateFormat.format(a.getDate()) + " "
+							+ dateFormat.format( ((Daily)a).getStartDate() ) + " " 
+							+ dateFormat.format( ((Daily)a).getEndDate() ) + " " + a.getDescription());
+				else if(type[type.length - 1].equalsIgnoreCase("Monthly"))
+					out.println(type[type.length - 1] + " " + dateFormat.format(a.getDate()) + " "
+							+ dateFormat.format( ((Monthly)a).getStartDate() ) + " "
+							+ dateFormat.format( ((Monthly)a).getEndDate() ) + " " + a.getDescription());
+				else
+					out.println(type[type.length - 1] + " " + dateFormat.format(a.getDate()) + " " + a.getDescription());
+			}
+			out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 }

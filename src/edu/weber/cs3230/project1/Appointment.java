@@ -45,32 +45,5 @@ public class Appointment {
 			return true;
 		else 
 			return false;
-	}
-	
-	public void save() {
-		File inputFile = new File("appointments.txt");
-		if (!inputFile.exists()) {
-			try {
-				inputFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MM dd");
-			PrintStream out = new PrintStream(inputFile);
-			String type[] = this.getClass().getName().split("\\.");
-			out.println(type[type.length - 1] + " " + dateFormat.format(date) + " " + description);
-			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}				
-		
-	}
-	
-	public String load() {
-		return "";
-	}
-	
+	}	
 }

@@ -21,6 +21,14 @@ public class Daily extends Appointment {
 		this.endDate = end.getTime();
 	}
 	
+	public Date getStartDate() {
+		return (Date)startDate.clone();
+	}
+	
+	public Date getEndDate() {
+		return (Date)endDate.clone();
+	}
+	
 	public boolean occursOn(int year, int month, int day) {
 		GregorianCalendar calendar = new GregorianCalendar(year, month - 1, day);
 		Date date = calendar.getTime();
@@ -28,26 +36,5 @@ public class Daily extends Appointment {
 			return true;
 		else
 			return false;
-	}
-	
-	public void save() {
-		File inputFile = new File("appointments.txt");
-		if (!inputFile.exists()) {
-			try {
-				inputFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MM dd");
-			PrintStream out = new PrintStream(inputFile);
-			String type[] = this.getClass().getName().split("\\.");
-			out.println(type[type.length - 1] + " " + dateFormat.format(super.getDate()) + " " + dateFormat.format(startDate) + " " + dateFormat.format(endDate) + " " + super.getDescription());
-			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}				
 	}
 }

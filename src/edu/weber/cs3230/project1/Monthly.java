@@ -9,18 +9,24 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class Monthly extends Appointment {
-	private int dayOfMonth;
 	private Date startDate;
 	private Date endDate;
 	
 	public Monthly(int year, int month, int day, String description, int startYear, 
 			int startMonth, int startDay, int endYear, int endMonth, int endDay) {
 		super(year, month, day, description);
-		dayOfMonth = day;
 		GregorianCalendar start = new GregorianCalendar(startYear, startMonth - 1, startDay);
 		GregorianCalendar end = new GregorianCalendar(endYear, endMonth - 1, endDay);
 		this.startDate = start.getTime();
 		this.endDate = end.getTime();
+	}
+	
+	public Date getStartDate() {
+		return (Date)startDate.clone();
+	}
+	
+	public Date getEndDate() {
+		return (Date)endDate.clone();
 	}
 	
 	public boolean occursOn(int year, int month, int day) {
@@ -32,26 +38,5 @@ public class Monthly extends Appointment {
 			return true;
 		else 
 			return false;
-	}
-	
-	public void save() {
-		File inputFile = new File("appointments.txt");
-		if (!inputFile.exists()) {
-			try {
-				inputFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MM dd");
-			PrintStream out = new PrintStream(inputFile);
-			String type[] = this.getClass().getName().split("\\.");
-			out.println(type[type.length - 1] + " " + dateFormat.format(super.getDate()) + " " + dateFormat.format(startDate) + " " + dateFormat.format(endDate) + " " + super.getDescription());
-			out.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}				
 	}
 }

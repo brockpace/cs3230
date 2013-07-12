@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -45,10 +46,12 @@ class RectangleFrame extends JFrame {
 		moreButton = new JButton("More");
 		fewerButton = new JButton("Fewer");
 		numRectangles = 100;
+		RectangleFrame component = new RectangleFrame();
+		
 		
 		buttonPanel = new JPanel();
 		mainPanel = new JPanel();
-		
+		mainPanel.add(component);
 		buttonPanel.add(moreButton);
 		buttonPanel.add(fewerButton);
 		
@@ -62,7 +65,7 @@ class RectangleFrame extends JFrame {
 		
 		
 	}
-	   private class RectangleAction implements ActionListener
+	   private class RectangleAction extends JComponent implements ActionListener
 	   {
 	      //this is called when the actionlistener is notified that what it is listening for happened. it than calls the action Performed
 	      public void actionPerformed(ActionEvent event)
@@ -72,7 +75,7 @@ class RectangleFrame extends JFrame {
 	    	  
 	         if (event.getSource() == moreButton) {
 	        	 numRectangles *= 2;
-	        	 //paintComponent(this.getGraphics());
+	        	 //paintComponent(this);
 	         } else if (event.getSource() == fewerButton) {
 	        	 numRectangles /= 2;
 	         }

@@ -20,16 +20,34 @@ public class Airplane {
 		economyLeft = new Seat[15][3];
 		economyRight = new Seat[15][3];
 		
-		//create seats
+		//create first class seats
 		for(int i = 0; i < 5; i++){
 			for(int j = 0; j < 2; j++){
 				if(j % 2 == 0){
+					firstClassLeft[i][j] = new Seat("window", true);
+					firstClassRight[i][j] = new Seat("aisle", true);
+				}
+				else{
 					firstClassLeft[i][j] = new Seat("aisle", true);
 					firstClassRight[i][j] = new Seat("window", true);
 				}
-				else{
-					firstClassLeft[i][j] = new Seat("window", true);
-					firstClassRight[i][j] = new Seat("aisle", true);
+			}
+		}
+		
+		//create economy seats
+		for(int i = 0; i < 15; i++){
+			for(int j = 0; j < 3; j++){
+				if(j == 0){
+					economyLeft[i][j] = new Seat("window", true);
+					economyRight[i][j] = new Seat("aisle", true);
+				}
+				else if(j == 1){
+					economyLeft[i][j] = new Seat("center", true);
+					economyRight[i][j] = new Seat("center", true);
+				}
+				else if(j == 2){
+					economyLeft[i][j] = new Seat("aisle", true);
+					economyRight[i][j] = new Seat("window", true);
 				}
 			}
 		}
@@ -45,19 +63,61 @@ public class Airplane {
 		for(int i = 0; i < firstClassRows; i++){
 			for(int j = 0; j < firstClassSeats; j++){
 				if(j % 2 == 0){
-					firstClassLeft[i][j] = new Seat("aisle", true);
-					firstClassRight[i][j] = new Seat("window", true);
-				}
-				else{
 					firstClassLeft[i][j] = new Seat("window", true);
 					firstClassRight[i][j] = new Seat("aisle", true);
+				}
+				else{
+					firstClassLeft[i][j] = new Seat("aisle", true);
+					firstClassRight[i][j] = new Seat("window", true);
 				}
 			}
 		}
 	}
 	
 	public void addPassengers(String classType, int passengerCount, String seatPreference) {
-		
+		switch (classType.toLowerCase()) {
+			default: case "economy":
+				if(passengerCount == 1){
+					for(int i = 0; i < economyLeft.length; i++){
+						for(int j = 0; j < economyLeft.length; j++){
+							if(economyLeft[i][j].getType() == seatPreference.toLowerCase()){
+								break;
+							}
+							else if(economyRight[i][j].getType() == seatPreference.toLowerCase()){
+								break;
+							}
+						}
+					}
+				}
+				else if(passengerCount == 2){
+					for(int i = 0; i < economyLeft.length; i++){
+						for(int j = 0; j < economyLeft.length; j++){
+							if(economyLeft[i][j].getType() == seatPreference.toLowerCase()){
+								break;
+							}
+							else if(economyRight[i][j].getType() == seatPreference.toLowerCase()){
+								break;
+							}
+						}
+					}
+				}
+				else if(passengerCount == 3){
+					for(int i = 0; i < economyLeft.length; i++){
+						for(int j = 0; j < economyLeft.length; j++){
+							if(economyLeft[i][j].getType() == seatPreference.toLowerCase()){
+								break;
+							}
+							else if(economyRight[i][j].getType() == seatPreference.toLowerCase()){
+								break;
+							}
+						}
+					}
+				}
+				break;
+			case "first class": case "firstclass":
+				
+				break;
+		}
 	}
 	
 	public ArrayList<Seat[][]> showSeating() {

@@ -91,28 +91,42 @@ public class AirplaneTester {
 					Seat[][] economyLeft = seats.get(2);
 					Seat[][] economyRight = seats.get(3);
 					
+					//Draw front of plane
+					System.out.println("      _____");
+					System.out.println("     /     \\");
+					System.out.println("    /       \\");
+					System.out.println("   /         \\");
+					System.out.println("  /           \\");
+					System.out.println(" /             \\");
+					
 					//Print out First Class Seating
-					System.out.println("\nFirst Class Seating");
+					//System.out.println("\nFirst Class Seating");
 					for(int i = 0; i < firstClassLeft.length; i++){
+						System.out.print("| ");
 						for(int j = 0; j < firstClassLeft[0].length; j++){
 							if(firstClassLeft[i][j].isAvailable())
-								System.out.print("O ");
+								System.out.print("O  ");
 							else
-								System.out.print("X ");
+								System.out.print("X  ");
 						}
-						System.out.print("  ");
+						System.out.print("   ");
 						for(int j = 0; j < firstClassRight[0].length; j++){
 							if(firstClassRight[i][j].isAvailable())
-								System.out.print("O ");
+								System.out.print("O");
 							else
-								System.out.print("X ");
+								System.out.print("X");
+							if(j == firstClassRight[0].length - 1)
+								System.out.print(" ");
+							else
+								System.out.print("  ");
 						}
-						System.out.println();
+						System.out.println("|");
 					}
 					
 					//Print out Economy Seating
-					System.out.println("Economy Seating");
+					//System.out.println("Economy Seating");
 					for(int i = 0; i < economyLeft.length; i++){
+						System.out.print("| ");
 						for(int j = 0; j < economyLeft[0].length; j++){
 							if(economyLeft[i][j].isAvailable())
 								System.out.print("O ");
@@ -126,8 +140,17 @@ public class AirplaneTester {
 							else
 								System.out.print("X ");
 						}
-						System.out.println();
+						System.out.println("|");
 					}
+					
+					//Draw back of plane
+					System.out.println(" \\             /    ");
+					System.out.println("  \\           /    ");
+					System.out.println("   \\         /   ");
+					System.out.println("____\\       /____");
+					System.out.println("-----\\     /-----");
+					System.out.println("      \\   /");
+					System.out.println("       \\ /");
 					break;
 					
 				default: case 3:

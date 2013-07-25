@@ -15,17 +15,11 @@ public class AirplaneTester {
 		else
 			airplane = new Airplane();
 		
-		
-//		airplane.addPassengers("first class", 1, "window");
-//		airplane.addPassengers("firstClass", 2, "window");
-//		airplane.addPassengers("firstclass", 1, "window");
-//		airplane.addPassengers("firstclass", 1, "window");
-//		
-//		airplane.addPassengers("economy", 2, "window");
-//		airplane.addPassengers("economy", 2, "window");
-//		airplane.addPassengers("economy", 1, "window");
-//		airplane.addPassengers("economy", 3, "window");
-//		
+		//Testing
+//		for (int i = 0; i < 10; i++)
+//			airplane.addPassengers("firstclass", 2, "aisle");		
+//		for (int i = 0; i < 30; i++)
+//			airplane.addPassengers("economy", 3, "aisle");
 		
 		System.out.println("Welcome to CS3230 Airlines!");
 		Scanner in = new Scanner(System.in);
@@ -59,7 +53,7 @@ public class AirplaneTester {
 							break;
 						}
 					}
-					else if (classType.compareTo("firstclass") == 0 && classType.compareTo("first class") == 0){
+					else if (classType.compareTo("firstclass") == 0 || classType.compareTo("first class") == 0){
 						//Input number of passengers
 						System.out.print("Number of Passengers (1-2): ");
 						passengers = in.nextInt();
@@ -70,7 +64,7 @@ public class AirplaneTester {
 						//Input Seating Preference
 						System.out.print("What is the seating preference (aisle or window)? ");
 						seatPreference = in.next().toLowerCase();
-						if(seatPreference.compareTo("aisle") != 0 || seatPreference.compareTo("window") != 0){
+						if(seatPreference.compareTo("aisle") != 0 && seatPreference.compareTo("window") != 0){
 							System.out.println("Seating Preference must be aisle or window");
 							break;
 						}
@@ -79,8 +73,10 @@ public class AirplaneTester {
 						System.out.println("class must be economy or firstclass");
 						break;
 					}
-					airplane.addPassengers(classType, passengers, seatPreference);
-					System.out.println("Passenger(s) added successfully.");
+					if(airplane.addPassengers(classType, passengers, seatPreference))
+						System.out.println("Passenger(s) added successfully.");
+					else
+						System.out.println("The preferred seat(s) could not be found.  Please try a different selection.");
 					break;
 					
 				case 2:
@@ -92,7 +88,7 @@ public class AirplaneTester {
 					Seat[][] economyRight = seats.get(3);
 					
 					//Draw front of plane
-					System.out.println("      _____");
+					System.out.println("      _-^-_");
 					System.out.println("     /     \\");
 					System.out.println("    /       \\");
 					System.out.println("   /         \\");
@@ -154,6 +150,7 @@ public class AirplaneTester {
 					break;
 					
 				default: case 3:
+					in.close();
 					System.exit(0);
 					break;
 			}

@@ -22,11 +22,20 @@ public class AirplaneTester {
 //			airplane.addPassengers("economy", 3, "aisle");
 		
 		System.out.println("Welcome to CS3230 Airlines!");
+		
+		ArrayList<Seat[][]> seats;
+		Seat[][] firstClassLeft;
+		Seat[][] firstClassRight;
+		Seat[][] economyLeft;
+		Seat[][] economyRight;
 		Scanner in = new Scanner(System.in);
 		while(true) {
 			System.out.print("\n1: Add Passengers");
 			System.out.print("\n2: Show Seating");
-			System.out.print("\n3: Quit");
+			System.out.print("\n3: Order");
+			System.out.print("\n4: List Charges");
+			System.out.print("\n5: List Orders");
+			System.out.print("\n0: Quit");
 			System.out.print("\nYour Choice: ");
 			int choice = in.nextInt();
 			switch (choice) {
@@ -81,11 +90,11 @@ public class AirplaneTester {
 					
 				case 2:
 					//Print Seating
-					ArrayList<Seat[][]> seats = airplane.showSeating();
-					Seat[][] firstClassLeft = seats.get(0);
-					Seat[][] firstClassRight = seats.get(1);
-					Seat[][] economyLeft = seats.get(2);
-					Seat[][] economyRight = seats.get(3);
+					seats = airplane.showSeating();
+					firstClassLeft = seats.get(0);
+					firstClassRight = seats.get(1);
+					economyLeft = seats.get(2);
+					economyRight = seats.get(3);
 					
 					//Draw front of plane
 					System.out.println("      _-^-_");
@@ -148,8 +157,107 @@ public class AirplaneTester {
 					System.out.println("      \\   /");
 					System.out.println("       \\ /");
 					break;
+				
+				case 3:
+					//Order Drinks/Snacks				
+					int row; int col;
+					String seating;
+					System.out.print("What class (economy or firstclass)? ");
+					seating = in.next().toLowerCase();
+					if(seating.compareTo("firstclass") != 0 && seating.compareTo("economy") != 0) {
+						System.out.println("Class must be economy or firstclass");	
+						break;
+					}
+					System.out.print("Seat Row: ");
+					row = in.nextInt();
+					System.out.print("Seat Column: ");
+					col = in.nextInt();
+					System.out.print("Drink or Snack? ");
+					String menuType = in.next().toLowerCase();
+					switch(menuType){
+						case "drink":
+							for(int i = 0; i < airplane.getDrinks().length; i++) {
+								System.out.println(i + ": " + airplane.getDrinks()[i].getType() + " $" + airplane.getDrinks()[i].getCost());
+							}
+							System.out.print("Your selection: ");
+							int orderNumber = in.nextInt();
+							
+							if(airplane.orderDrink(seating, row, col, orderNumber))
+								System.out.println("Drink ordered.");
+							else
+								System.out.println("Please make sure your seat row and column are correct.");
+							break;
+						
+						case "snack":
+							for(int i = 0; i < airplane.getSnacks().length; i++) {
+								System.out.println(i + ": " + airplane.getSnacks()[i].getType() + " $" + airplane.getSnacks()[i].getCost());
+							}
+							System.out.print("Your selection: ");
+							orderNumber = in.nextInt();
+							if(airplane.orderSnack(seating,  row, col, orderNumber))
+								System.out.println("Snack ordered.");
+							else
+								System.out.println("Please make sure your seat row and column are correct.");
+							break;
+						
+						default:
+							System.out.println("Please enter drink or snack.");
+							break;
+					}
+					break;
 					
-				default: case 3:
+				case 4:
+					//airplane.generatePurchases();
+					seats = airplane.showSeating();
+					firstClassLeft = seats.get(0);
+					firstClassRight = seats.get(1);
+					economyLeft = seats.get(2);
+					economyRight = seats.get(3);
+					
+					System.out.println("\nFirst Class:");
+					for(int i = 0; i < firstClassLeft.length; i++){
+						for(int j = 0; j < firstClassLeft[0].length; j++){
+							System.out.println("Row: " + (i+1) + ", Col: " + (j+1) + "    Charges: $" + firstClassLeft[i][j].totalCost());
+						}
+						for(int j = 0; j < firstClassLeft[0].length; j++){
+							System.out.println("Row: " + (i+1) + ", Col: " + (j+firstClassLeft[0].length+1) + "    Charges: $" + firstClassRight[i][j].totalCost());
+						}
+					}
+					System.out.println("First Class Total Charges: $" + airplane.getFirstClassTotalCost());
+					
+					System.out.println("\nEconomy:");
+					for(int i = 0; i < economyLeft.length; i++){
+						for(int j = 0; j < economyLeft[0].length; j++){
+							System.out.println("Row: " + (i+1) + ", Col: " + (j+1) + "    Charges: $" + economyLeft[i][j].totalCost());
+						}
+						for(int j = 0; j < economyLeft[0].length; j++){
+							System.out.println("Row: " + (i+1) + ", Col: " + (j+economyLeft[0].length+1) + "    Charges: $" + economyRight[i][j].totalCost());
+						}
+					}
+					System.out.println("Economy Total Charges:      $" + airplane.getEconomyTotalCost());
+					System.out.println("\nGrand Total: $" + (airplane.getFirstClassTotalCost()+airplane.getEconomyTotalCost()));
+					break;
+					
+				case 5:
+					//Print out Snack and Drink Orders by class
+					System.out.println("\nFirst Class:");
+					for(int i = 0; i < airplane.getFirstClassDrinkItems().length; i++) {
+						System.out.println(airplane.getDrinks()[i].getType() + ": " + airplane.getFirstClassDrinkItems()[i]);
+					}
+					for(int i = 0; i < airplane.getFirstClassSnackItems().length; i++) {
+						System.out.println(airplane.getSnacks()[i].getType() + ": " + airplane.getFirstClassSnackItems()[i]);
+					}
+					
+					System.out.println("\nEonomy:");
+					for(int i = 0; i < airplane.getEconomyDrinkItems().length; i++) {
+						System.out.println(airplane.getDrinks()[i].getType() + ": " + airplane.getEconomyDrinkItems()[i]);
+					}
+					for(int i = 0; i < airplane.getEconomySnackItems().length; i++) {
+						System.out.println(airplane.getSnacks()[i].getType() + ": " + airplane.getEconomySnackItems()[i]);
+					}
+					break;
+				
+				default: case 0:
 					in.close();
 					System.exit(0);
 					break;

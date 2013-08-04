@@ -12,13 +12,16 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class RandomRectangles {
+public class RandomRectanglesSlider {
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				RectangleFrame frame = new RectangleFrame();
+				RectangleSliderFrame frame = new RectangleSliderFrame();
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setVisible(true);
 			}
@@ -26,55 +29,42 @@ public class RandomRectangles {
 	}
 }
 
-class RectangleFrame extends JFrame {
+class RectangleSliderFrame extends JFrame {
 	
 	private JPanel buttonPanel;
 	private JPanel mainPanel;
-	private JButton moreButton;
-	private JButton fewerButton;
+	private JSlider slider;
 	public static final int DEFAULT_WIDTH = 500;
 	public static final int DEFAULT_HEIGHT = 500;
 	private int numRectangles;
 	
-	public RectangleFrame() {		
+	public RectangleSliderFrame() {		
 		setTitle("Random Rectangle Viewer");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-		moreButton = new JButton("More");
-		fewerButton = new JButton("Fewer");
 		numRectangles = 100;		
 		
 		buttonPanel = new JPanel();
-		mainPanel = new MainPanel();
+		mainPanel = new MainSliderPanel();
 
-		buttonPanel.add(moreButton);
-		buttonPanel.add(fewerButton);
+		slider = new JSlider(0, 512);
+		buttonPanel.add(slider);
 		
 		add(mainPanel, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.SOUTH);
 
-		moreButton.addActionListener(new RectangleAction());
-		fewerButton.addActionListener(new RectangleAction());
-		
+		slider.addChangeListener(new RectangleAction());
 	}
 	
-	private class RectangleAction implements ActionListener {
-		//this is called when the actionlistener is notified that what it is listening for happened. it than calls the action Performed
-		public void actionPerformed(ActionEvent event){
-			//System.out.println(numRectangles);
-			if (event.getSource() == moreButton) {
-				numRectangles *= 2;
-				repaint();
-			} else if (event.getSource() == fewerButton) {
-				numRectangles /= 2;
-				if(numRectangles < 1)
-					numRectangles = 1;
-				repaint();
-			}
+	private class RectangleAction implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent arg0) {
+			numRectangles = slider.getValue();
+			repaint();
 		}
 	}
 	
 	//Inner Class MainPanel that extends JPanel
-	class MainPanel extends JPanel {
+	class MainSliderPanel extends JPanel {
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D) g;
